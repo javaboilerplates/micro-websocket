@@ -1,0 +1,20 @@
+info:
+  name: micro-websocket
+  version: 0.0.0
+  description: Boilerplate for WebSocket Microservice in Java
+  documentation: https://github.com/javaboilerplates/micro-websocket
+server:
+  port: 8000
+spring:
+  boot:
+    admin:
+      url: http://localhost:8002
+      username: admin
+      password: admin
+  application:
+    name: ${info.name}
+management:
+  security:
+    enabled: false
+
+

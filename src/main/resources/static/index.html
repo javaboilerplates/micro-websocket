@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Boilerplates</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+</head>
+<body>
+
+<div id="app">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+           <div class="text-center">
+               <p>
+                   <button class="btn btn-primary" @click="getAllSamples" >Get All Samples</button>
+               </p>
+                <p>
+                    <input  class="form-control" type="text" v-model="keyword" placeholder="Name Keyword"/>
+                </p>
+               <p>
+               <button class="btn btn-primary" @click="getAllByNameSamples" >Get All Samples by name keyword</button>
+               </p>
+           </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+
+            <ul>
+                <li v-for="(item, index) in samples" :key="index">{{item.name}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            stompClient: null,
+            samples: [],
+            keyword: ''
+        },
+        created() {
+            var socket = new SockJS('/api/v1/websocket');
+            var stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+                 stompClient.subscribe('/api/v1/to/samples/all', getAllSamplesListen.bind(this));
+                stompClient.subscribe('/api/v1/to/samples/name', getAllByNameSamplesListen.bind(this));
+            }.bind(this));
+
+            this.stompClient = stompClient;
+
+            function getAllSamplesListen (response) {
+                this.samples = JSON.parse(response.body);
+            }
+
+            function getAllByNameSamplesListen (response) {
+                this.samples = JSON.parse(response.body);
+            }
+        },
+        methods: {
+            getAllSamples () {
+                this.stompClient.send("/api/v1/message/samples/all")
+            },
+            getAllByNameSamples () {
+                this.stompClient.send("/api/v1/message/samples/name", {}, JSON.stringify({'keyword': this.keyword}))
+            }
+        }
+    })
+</script>
+</body>
+</html>
