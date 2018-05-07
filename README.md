@@ -7,7 +7,7 @@
 [![JavaDoc](https://img.shields.io/badge/javadoc-API-blue.svg)](https://javaboilerplates-micro-websocket.aikaka.net/apidocs/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/javaboilerplates/micro-websocket/blob/master/LICENSE)
 ## Features
-- REST API and Swagger UI
+- Stream API and Demo UI
 - Metrics and health check
 - CI with Travis
 - Docker Build
